@@ -132,8 +132,11 @@ class Server:
             if message.find("exchange") != -1:
                 ms = ms_parser(message)
                 print(ms)
-                await log_file(ms[1])
+                if ms[0] >= 10:
+                    await self.send_to_clients("Only for period that is less than 10 days!")
+                    continue
                 exchange = await get_exchange(pb_handler, ms[0], ms[1])
+                await log_file(ms[1])
                 await self.send_to_clients(str(exchange))
             if message == "codes":
                 await self.send_to_clients(currencies)
